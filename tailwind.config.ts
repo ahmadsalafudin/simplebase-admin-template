@@ -1,0 +1,96 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  darkMode: "class",
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        "phosphor-green": "var(--color-phosphor-green)",
+        "mint-pulse": "var(--color-mint-pulse)",
+        "forest-depth": "var(--color-forest-depth)",
+        "midnight-emerald": "var(--color-midnight-emerald)",
+        snow: "var(--color-snow)",
+        "silver-mist": "var(--color-silver-mist)",
+        smoke: "var(--color-smoke)",
+        graphite: "var(--color-graphite)",
+        slate: "var(--color-slate)",
+        charcoal: "var(--color-charcoal)",
+        ash: "var(--color-ash)",
+        obsidian: "var(--color-obsidian)",
+        canvas: "var(--color-canvas)",
+        /* Fixed ink color: always dark, used for text/icons drawn on top of
+           the phosphor-green accent so contrast holds in both themes. */
+        ink: "#0d1318",
+      },
+      fontFamily: {
+        circular: [
+          "var(--font-circular)",
+          "ui-sans-serif",
+          "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "Roboto",
+          "sans-serif",
+        ],
+        mono: [
+          "var(--font-source-code-pro)",
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Monaco",
+          "Consolas",
+          "monospace",
+        ],
+      },
+      fontSize: {
+        caption: ["12px", { lineHeight: "1.5", letterSpacing: "-0.084px" }],
+        "body-sm": ["14px", { lineHeight: "1.43", letterSpacing: "-0.098px" }],
+        body: ["16px", { lineHeight: "1.5", letterSpacing: "-0.112px" }],
+        subheading: ["18px", { lineHeight: "1.38", letterSpacing: "-0.126px" }],
+        "heading-sm": ["24px", { lineHeight: "1.33", letterSpacing: "-0.168px" }],
+        heading: ["36px", { lineHeight: "1.2", letterSpacing: "-0.252px" }],
+        display: ["72px", { lineHeight: "1", letterSpacing: "-0.504px" }],
+      },
+      borderRadius: {
+        tag: "9999px",
+        card: "16px",
+        input: "8px",
+        button: "9999px",
+      },
+      spacing: {
+        "1": "1px",
+        "2": "2px",
+        "3": "3px",
+        "4": "4px",
+        "6": "6px",
+        "7": "7px",
+        "8": "8px",
+        "16": "16px",
+        "18": "18px",
+        "19": "19px",
+        "24": "24px",
+        "32": "32px",
+        "40": "40px",
+        "48": "48px",
+        "64": "64px",
+        "80": "80px",
+        "88": "88px",
+        "96": "96px",
+        "112": "112px",
+        "128": "128px",
+        "224": "224px",
+      },
+      maxWidth: {
+        page: "1200px",
+      },
+    },
+  },
+  plugins: [],
+};
+export default config;

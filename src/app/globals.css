@@ -1,0 +1,201 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-circular: "Inter";
+  --font-source-code-pro: "JetBrains Mono";
+  --content-max-width: 1200px;
+
+  /* Dark theme (default) */
+  --color-phosphor-green: #3ecf8e;
+  --color-mint-pulse: #00c573;
+  --color-forest-depth: #1f4b37;
+  --color-midnight-emerald: #006239;
+  --color-snow: #fafafa;
+  --color-silver-mist: #b4b4b4;
+  --color-smoke: #898989;
+  --color-graphite: #4d4d4d;
+  --color-slate: #393939;
+  --color-charcoal: #2e2e2e;
+  --color-ash: #242424;
+  --color-obsidian: #121212;
+  --color-canvas: #0d0d0d;
+  --color-selection-bg: #1f4b37;
+  --color-selection-text: #fafafa;
+  --color-scrollbar-track: #121212;
+  --color-scrollbar-thumb: #2e2e2e;
+  --color-scrollbar-thumb-hover: #393939;
+  --color-card-outline: rgba(62, 207, 142, 0.16);
+  --color-card-outline-hover: rgba(62, 207, 142, 0.32);
+}
+
+html.light {
+  --color-phosphor-green: #18a06a;
+  --color-mint-pulse: #0f8f5c;
+  --color-forest-depth: #bdeed7;
+  --color-midnight-emerald: #d9f5e8;
+  --color-snow: #16181a;
+  --color-silver-mist: #3f3f46;
+  --color-smoke: #6b6f76;
+  --color-graphite: #a1a1aa;
+  --color-slate: #d8d9dc;
+  --color-charcoal: #e6e7e9;
+  --color-ash: #f1f2f3;
+  --color-obsidian: #ffffff;
+  --color-canvas: #f7f7f8;
+  --color-selection-bg: #bdeed7;
+  --color-selection-text: #16181a;
+  --color-scrollbar-track: #ffffff;
+  --color-scrollbar-thumb: #e6e7e9;
+  --color-scrollbar-thumb-hover: #d8d9dc;
+  --color-card-outline: rgba(24, 160, 106, 0.18);
+  --color-card-outline-hover: rgba(24, 160, 106, 0.36);
+}
+
+/* Wide table/content layout — toggled from Settings → General → Table layout */
+html.wide-layout {
+  --content-max-width: 100%;
+}
+
+/* Page transition — a soft, quick fade + rise applied to the main content
+   area whenever the route changes, via PageTransition remounting on pathname */
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-page-in {
+  animation: page-fade-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-page-in {
+    animation: none;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: var(--color-obsidian);
+  color: var(--color-snow);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+body {
+  font-family: var(--font-circular), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.007em;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: var(--color-selection-bg);
+  color: var(--color-selection-text);
+}
+
+/* Scrollbar - keep it quiet, monochrome */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-scrollbar-track);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar-thumb);
+  border-radius: 9999px;
+  border: 2px solid var(--color-scrollbar-track);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-scrollbar-thumb-hover);
+}
+
+@layer components {
+  /* Buttons */
+  .btn-pill-primary {
+    @apply inline-flex items-center justify-center gap-8 rounded-button bg-phosphor-green text-ink text-body-sm font-medium px-16 py-8 border border-phosphor-green transition-colors duration-150 hover:border-forest-depth hover:bg-mint-pulse;
+  }
+  .btn-pill-ghost {
+    @apply inline-flex items-center justify-center gap-8 rounded-button bg-transparent text-snow text-body-sm px-16 py-8 border border-slate transition-colors duration-150 hover:border-graphite hover:bg-white/[0.04];
+  }
+
+  /* Cards — hairline theme-tinted outline sits just inside the charcoal
+     border for a calm, elevated edge without resorting to shadows */
+  .card {
+    @apply rounded-card border border-charcoal bg-obsidian p-24;
+    outline: 1px solid var(--color-card-outline);
+    outline-offset: -1px;
+    transition: outline-color 150ms ease, border-color 150ms ease;
+  }
+  .card-ash {
+    @apply rounded-card border border-charcoal bg-ash p-24;
+    outline: 1px solid var(--color-card-outline);
+    outline-offset: -1px;
+    transition: outline-color 150ms ease, border-color 150ms ease;
+  }
+
+  /* Inputs */
+  .input-field {
+    @apply w-full rounded-input border border-slate bg-obsidian px-16 py-8 text-body-sm text-snow placeholder-smoke outline-none transition-colors duration-150 focus:border-phosphor-green;
+  }
+
+  /* Pills / tags */
+  .pill-tag {
+    @apply inline-flex items-center gap-8 rounded-tag border border-charcoal bg-ash px-16 py-[6px] text-caption text-silver-mist;
+  }
+
+  /* Nav link — a soft themed outline + slight nudge appears on hover/active,
+     giving menu switching a smooth, tactile feel */
+  .nav-link {
+    @apply flex items-center gap-16 rounded-input px-16 py-8 text-body-sm text-silver-mist hover:bg-white/[0.04] hover:text-snow hover:translate-x-[2px];
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+    transition: background-color 150ms ease, color 150ms ease, outline-color 150ms ease,
+      transform 150ms ease;
+  }
+  .nav-link:hover {
+    outline-color: var(--color-card-outline);
+  }
+  .nav-link-active {
+    @apply flex items-center gap-16 rounded-input px-16 py-8 text-body-sm text-snow bg-ash border border-charcoal;
+    outline: 1px solid var(--color-card-outline);
+    outline-offset: -1px;
+    transition: outline-color 150ms ease, border-color 150ms ease;
+  }
+
+  /* Nav sublink — indented dropdown items (e.g. Error Pages submenu) */
+  .nav-sublink {
+    @apply flex items-center gap-8 rounded-input pl-40 pr-16 py-8 text-body-sm text-silver-mist hover:bg-white/[0.04] hover:text-snow hover:translate-x-[2px];
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+    transition: background-color 150ms ease, color 150ms ease, outline-color 150ms ease,
+      transform 150ms ease;
+  }
+  .nav-sublink:hover {
+    outline-color: var(--color-card-outline);
+  }
+  .nav-sublink-active {
+    @apply flex items-center gap-8 rounded-input pl-40 pr-16 py-8 text-body-sm text-snow bg-ash border border-charcoal;
+    outline: 1px solid var(--color-card-outline);
+    outline-offset: -1px;
+    transition: outline-color 150ms ease, border-color 150ms ease;
+  }
+
+  /* Table */
+  .table-th {
+    @apply text-left text-caption text-smoke font-medium px-16 py-16 border-b border-charcoal;
+  }
+  .table-td {
+    @apply text-body-sm text-silver-mist px-16 py-16 border-b border-charcoal;
+  }
+}
