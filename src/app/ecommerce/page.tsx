@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import PageShell from "@/components/PageShell";
 import StatCard from "@/components/StatCard";
 import { products, orders } from "@/lib/data";
@@ -11,6 +11,16 @@ import {
   Users2,
   Plus,
   MoreHorizontal,
+  List,
+  LayoutGrid,
+  Search,
+  Keyboard,
+  Monitor,
+  Cable,
+  Armchair,
+  Headphones,
+  Package,
+  type LucideIcon,
 } from "lucide-react";
 
 const productStatusStyle: Record<string, string> = {
@@ -26,10 +36,32 @@ const orderStatusStyle: Record<string, string> = {
   Cancelled: "text-smoke",
 };
 
+// Visual treatment per product category — icon + soft tinted panel,
+// standing in for a real product photo.
+const categoryVisual: Record<string, { icon: LucideIcon; bg: string; fg: string }> = {
+  Peripherals: { icon: Keyboard, bg: "bg-sky-500/10", fg: "text-sky-400" },
+  Displays: { icon: Monitor, bg: "bg-violet-500/10", fg: "text-violet-400" },
+  Accessories: { icon: Cable, bg: "bg-amber-500/10", fg: "text-amber-400" },
+  Furniture: { icon: Armchair, bg: "bg-orange-500/10", fg: "text-orange-400" },
+  Audio: { icon: Headphones, bg: "bg-phosphor-green/10", fg: "text-phosphor-green" },
+};
+const defaultVisual = { icon: Package, bg: "bg-charcoal", fg: "text-smoke" };
+
 const tabs = ["Products", "Orders"];
+type ProductView = "list" | "grid";
 
 export default function EcommercePage() {
   const [active, setActive] = useState("Products");
+  const [view, setView] = useState<ProductView>("grid");
+  const [query, setQuery] = useState("");
+
+  const filteredProducts = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return products;
+    return products.filter(
+      (p) => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
+    );
+  }, [query]);
 
   return (
     <PageShell title="Ecommerce" subtitle="Manage your storefront, products, and orders">
@@ -59,52 +91,148 @@ export default function EcommercePage() {
 
         {active === "Products" ? (
           <div className="card p-0 overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between px-24 py-16 border-b border-charcoal">
+            <div className="flex flex-wrap items-center justify-between gap-16 px-24 py-16 border-b border-charcoal">
               <h2 className="text-subheading text-snow">Products</h2>
-              <button className="btn-pill-primary !px-16 !py-8">
-                <Plus size={14} />
-                Add product
-              </button>
+              <div className="flex items-center gap-8">
+                <div className="flex items-center gap-4 rounded-button border border-slate p-4">
+                  <button
+                    onClick={() => setView("list")}
+                    aria-label="List view"
+                    title="List view"
+                    className={`h-28 w-28 rounded-input flex items-center justify-center transition-colors ${
+                      view === "list"
+                        ? "bg-ash text-snow border border-charcoal"
+                        : "text-smoke hover:text-silver-mist"
+                    }`}
+                  >
+                    <List size={14} />
+                  </button>
+                  <button
+                    onClick={() => setView("grid")}
+                    aria-label="Grid view"
+                    title="Grid view"
+                    className={`h-28 w-28 rounded-input flex items-center justify-center transition-colors ${
+                      view === "grid"
+                        ? "bg-ash text-snow border border-charcoal"
+                        : "text-smoke hover:text-silver-mist"
+                    }`}
+                  >
+                    <LayoutGrid size={14} />
+                  </button>
+                </div>
+                <button className="btn-pill-primary !px-16 !py-8">
+                  <Plus size={14} />
+                  Add product
+                </button>
+              </div>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr>
-                    <th className="table-th">Product</th>
-                    <th className="table-th">Category</th>
-                    <th className="table-th">Price</th>
-                    <th className="table-th">Stock</th>
-                    <th className="table-th">Sold</th>
-                    <th className="table-th">Status</th>
-                    <th className="table-th"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.map((p) => (
-                    <tr key={p.id} className="hover:bg-ash/50 transition-colors">
-                      <td className="table-td">
-                        <div className="flex items-center gap-16">
-                          <div className="h-32 w-32 rounded-input bg-charcoal shrink-0" />
-                          <span className="text-snow truncate">{p.name}</span>
-                        </div>
-                      </td>
-                      <td className="table-td">{p.category}</td>
-                      <td className="table-td">{p.price}</td>
-                      <td className="table-td">{p.stock}</td>
-                      <td className="table-td">{p.sold}</td>
-                      <td className="table-td">
-                        <span className={productStatusStyle[p.status]}>● {p.status}</span>
-                      </td>
-                      <td className="table-td text-right">
-                        <button className="h-32 w-32 rounded-input hover:bg-white/[0.04] flex items-center justify-center ml-auto">
-                          <MoreHorizontal size={14} className="text-smoke" />
-                        </button>
-                      </td>
+
+            <div className="px-24 py-16 border-b border-charcoal">
+              <div className="relative max-w-[360px]">
+                <Search size={16} className="absolute left-16 top-1/2 -translate-y-1/2 text-smoke" />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search product or category..."
+                  className="input-field !pl-40"
+                />
+              </div>
+            </div>
+
+            {view === "list" ? (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr>
+                      <th className="table-th">Product</th>
+                      <th className="table-th">Category</th>
+                      <th className="table-th">Price</th>
+                      <th className="table-th">Stock</th>
+                      <th className="table-th">Sold</th>
+                      <th className="table-th">Status</th>
+                      <th className="table-th"></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filteredProducts.map((p) => {
+                      const visual = categoryVisual[p.category] ?? defaultVisual;
+                      const Icon = visual.icon;
+                      return (
+                        <tr key={p.id} className="hover:bg-ash/50 transition-colors">
+                          <td className="table-td">
+                            <div className="flex items-center gap-16">
+                              <div className={`h-32 w-32 rounded-input shrink-0 flex items-center justify-center ${visual.bg}`}>
+                                <Icon size={16} className={visual.fg} />
+                              </div>
+                              <span className="text-snow truncate">{p.name}</span>
+                            </div>
+                          </td>
+                          <td className="table-td">{p.category}</td>
+                          <td className="table-td">{p.price}</td>
+                          <td className="table-td">{p.stock}</td>
+                          <td className="table-td">{p.sold}</td>
+                          <td className="table-td">
+                            <span className={productStatusStyle[p.status]}>● {p.status}</span>
+                          </td>
+                          <td className="table-td text-right">
+                            <button className="h-32 w-32 rounded-input hover:bg-white/[0.04] flex items-center justify-center ml-auto">
+                              <MoreHorizontal size={14} className="text-smoke" />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                    {filteredProducts.length === 0 ? (
+                      <tr>
+                        <td className="table-td text-smoke text-center" colSpan={7}>
+                          No products match your search.
+                        </td>
+                      </tr>
+                    ) : null}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="p-24">
+                {filteredProducts.length === 0 ? (
+                  <p className="text-body-sm text-smoke text-center py-40">No products match your search.</p>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-16">
+                    {filteredProducts.map((p) => {
+                      const visual = categoryVisual[p.category] ?? defaultVisual;
+                      const Icon = visual.icon;
+                      return (
+                        <div
+                          key={p.id}
+                          className="card p-0 overflow-hidden flex flex-col transition-colors hover:border-slate"
+                        >
+                          <div className={`h-128 flex items-center justify-center ${visual.bg}`}>
+                            <Icon size={36} className={visual.fg} />
+                          </div>
+                          <div className="p-16 flex flex-col gap-8">
+                            <div className="flex items-center justify-between gap-8">
+                              <span className="pill-tag !py-[2px] !px-8">{p.category}</span>
+                              <button className="h-28 w-28 rounded-input hover:bg-white/[0.04] flex items-center justify-center shrink-0">
+                                <MoreHorizontal size={14} className="text-smoke" />
+                              </button>
+                            </div>
+                            <h3 className="text-body-sm text-snow font-medium truncate">{p.name}</h3>
+                            <div className="flex items-center justify-between">
+                              <span className="text-subheading text-snow font-semibold">{p.price}</span>
+                              <span className={`text-caption ${productStatusStyle[p.status]}`}>● {p.status}</span>
+                            </div>
+                            <div className="flex items-center justify-between text-caption text-smoke pt-4 border-t border-charcoal">
+                              <span>Stock: {p.stock}</span>
+                              <span>Sold: {p.sold}</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ) : null}
 
