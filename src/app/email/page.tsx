@@ -19,6 +19,7 @@ import {
   HelpCircle,
   Keyboard,
   X,
+  Menu,
   ChevronLeft,
   ChevronRight,
   ChevronDown,
@@ -52,12 +53,16 @@ const folderList: { id: Folder; label: string; icon: LucideIcon; count: number }
   { id: "trash", label: "Trash", icon: Trash2, count: 3 },
 ];
 
+type MobileView = "nav" | "list" | "detail";
+
 export default function EmailPage() {
   const [folder, setFolder] = useState<Folder>("inbox");
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(emails[0].id);
   const [attachmentsOpen, setAttachmentsOpen] = useState(true);
   const [draft, setDraft] = useState("");
+  // Small screens show one pane at a time; lg+ always shows all three.
+  const [mobileView, setMobileView] = useState<MobileView>("list");
 
   const inboxCount = emails.filter((e) => e.folder === "inbox").length;
   const priorityCount = emails.filter((e) => e.priority).length;
@@ -83,14 +88,24 @@ export default function EmailPage() {
   const openEmail = (id: string) => {
     setSelectedId(id);
     setAttachmentsOpen(true);
+    setMobileView("detail");
+  };
+
+  const selectFolder = (id: Folder) => {
+    setFolder(id);
+    setMobileView("list");
   };
 
   return (
     <PageShell title="Email" subtitle="Read and reply to messages without leaving Simplebase">
-      <div className="card p-0 overflow-hidden grid grid-cols-1 lg:grid-cols-[220px_340px_1fr] h-[calc(100vh-176px)] min-h-[640px]">
+      <div className="card p-0 overflow-hidden grid grid-rows-[1fr] grid-cols-1 lg:grid-cols-[220px_340px_1fr] h-[calc(100vh-176px)] min-h-[640px]">
         {/* Accounts + folder rail */}
-        <div className="border-r border-charcoal flex flex-col min-h-0">
-          <div className="flex items-center justify-between px-16 py-16 border-b border-charcoal">
+        <div
+          className={`${
+            mobileView === "nav" ? "flex" : "hidden"
+          } lg:flex border-r border-charcoal flex-col min-h-0`}
+        >
+          <div className="flex items-center justify-between px-16 h-64 shrink-0 border-b border-charcoal">
             <div className="flex -space-x-8">
               {emailAccounts.map((a) => (
                 <div
@@ -102,9 +117,18 @@ export default function EmailPage() {
                 </div>
               ))}
             </div>
-            <button className="h-28 w-28 rounded-input hover:bg-white/[0.04] flex items-center justify-center">
-              <MoreVertical size={14} className="text-smoke" />
-            </button>
+            <div className="flex items-center gap-4">
+              <button className="h-28 w-28 rounded-input hover:bg-white/[0.04] flex items-center justify-center transition-colors">
+                <MoreVertical size={14} className="text-smoke" />
+              </button>
+              <button
+                onClick={() => setMobileView("list")}
+                className="lg:hidden h-28 w-28 rounded-input hover:bg-white/[0.04] flex items-center justify-center transition-colors"
+                aria-label="Close menu"
+              >
+                <X size={14} className="text-smoke" />
+              </button>
+            </div>
           </div>
 
           <div className="px-16 py-16 border-b border-charcoal">
@@ -126,7 +150,7 @@ export default function EmailPage() {
               return (
                 <button
                   key={id}
-                  onClick={() => setFolder(id)}
+                  onClick={() => selectFolder(id)}
                   className={`w-full ${active ? "nav-link-active" : "nav-link"} justify-between`}
                 >
                   <span className="flex items-center gap-16">
@@ -144,7 +168,7 @@ export default function EmailPage() {
               return (
                 <button
                   key={id}
-                  onClick={() => setFolder(id)}
+                  onClick={() => selectFolder(id)}
                   className={`w-full ${active ? "nav-link-active" : "nav-link"} justify-between`}
                 >
                   <span className="flex items-center gap-16">
@@ -170,17 +194,30 @@ export default function EmailPage() {
         </div>
 
         {/* Message list */}
-        <div className="border-r border-charcoal flex flex-col min-h-0">
-          <div className="flex items-center justify-between px-16 py-16 border-b border-charcoal">
-            <h2 className="text-subheading text-snow capitalize">{folder}</h2>
-            <div className="flex items-center rounded-input border border-charcoal overflow-hidden">
-              <button className="h-28 w-32 hover:bg-white/[0.04] flex items-center justify-center border-r border-charcoal transition-colors">
+        <div
+          className={`${
+            mobileView === "list" ? "flex" : "hidden"
+          } lg:flex border-r border-charcoal flex-col min-h-0`}
+        >
+          <div className="flex items-center justify-between gap-8 px-16 h-64 shrink-0 border-b border-charcoal">
+            <div className="flex items-center gap-8 min-w-0">
+              <button
+                onClick={() => setMobileView("nav")}
+                className="lg:hidden h-28 w-28 rounded-input hover:bg-white/[0.04] flex items-center justify-center shrink-0 transition-colors"
+                aria-label="Open folders"
+              >
+                <Menu size={14} className="text-smoke" />
+              </button>
+              <h2 className="text-subheading text-snow capitalize truncate">{folder}</h2>
+            </div>
+            <div className="flex items-center rounded-input border border-charcoal overflow-hidden shrink-0">
+              <button className="h-28 w-28 hover:bg-white/[0.04] flex items-center justify-center border-r border-charcoal transition-colors">
                 <SlidersHorizontal size={14} className="text-smoke" />
               </button>
-              <button className="h-28 w-32 hover:bg-white/[0.04] flex items-center justify-center border-r border-charcoal transition-colors">
+              <button className="h-28 w-28 hover:bg-white/[0.04] flex items-center justify-center border-r border-charcoal transition-colors">
                 <RotateCw size={14} className="text-smoke" />
               </button>
-              <button className="h-28 w-32 hover:bg-white/[0.04] flex items-center justify-center transition-colors">
+              <button className="h-28 w-28 hover:bg-white/[0.04] flex items-center justify-center transition-colors">
                 <MoreHorizontal size={14} className="text-smoke" />
               </button>
             </div>
@@ -225,37 +262,46 @@ export default function EmailPage() {
         </div>
 
         {/* Reading pane */}
-        <div className="flex flex-col min-h-0">
-          <div className="flex items-center justify-between px-24 py-16 border-b border-charcoal">
-            <div className="flex items-center gap-12">
-              <button className="h-28 w-32 rounded-input border border-charcoal hover:bg-white/[0.04] flex items-center justify-center transition-colors">
-                <X size={14} className="text-smoke" />
+        <div
+          className={`${
+            mobileView === "detail" ? "flex" : "hidden"
+          } lg:flex flex-col min-h-0`}
+        >
+          <div className="flex items-center justify-between gap-12 px-16 h-64 shrink-0 border-b border-charcoal">
+            <div className="flex items-center gap-8 min-w-0">
+              <button
+                onClick={() => setMobileView("list")}
+                className="h-28 w-28 rounded-input border border-charcoal hover:bg-white/[0.04] flex items-center justify-center transition-colors shrink-0"
+                aria-label="Back to inbox"
+              >
+                <ChevronLeft size={14} className="text-smoke lg:hidden" />
+                <X size={14} className="text-smoke hidden lg:block" />
               </button>
-              <div className="flex items-center rounded-input border border-charcoal overflow-hidden">
-                <button className="h-28 w-32 hover:bg-white/[0.04] flex items-center justify-center border-r border-charcoal transition-colors">
+              <div className="hidden sm:flex items-center rounded-input border border-charcoal overflow-hidden shrink-0">
+                <button className="h-28 w-28 hover:bg-white/[0.04] flex items-center justify-center border-r border-charcoal transition-colors">
                   <ChevronLeft size={14} className="text-smoke" />
                 </button>
-                <button className="h-28 w-32 hover:bg-white/[0.04] flex items-center justify-center transition-colors">
+                <button className="h-28 w-28 hover:bg-white/[0.04] flex items-center justify-center transition-colors">
                   <ChevronRight size={14} className="text-smoke" />
                 </button>
               </div>
             </div>
-            <div className="flex items-center gap-12">
-              <div className="flex items-center rounded-input border border-charcoal overflow-hidden">
-                <button className="h-28 w-32 hover:bg-white/[0.04] flex items-center justify-center border-r border-charcoal transition-colors">
+            <div className="flex items-center gap-8 shrink-0">
+              <div className="hidden sm:flex items-center rounded-input border border-charcoal overflow-hidden">
+                <button className="h-28 w-28 hover:bg-white/[0.04] flex items-center justify-center border-r border-charcoal transition-colors">
                   <Pin size={14} className="text-smoke" />
                 </button>
-                <button className="h-28 w-32 hover:bg-white/[0.04] flex items-center justify-center border-r border-charcoal transition-colors">
+                <button className="h-28 w-28 hover:bg-white/[0.04] flex items-center justify-center border-r border-charcoal transition-colors">
                   <Archive size={14} className="text-smoke" />
                 </button>
-                <button className="h-28 w-32 hover:bg-white/[0.04] flex items-center justify-center border-r border-charcoal transition-colors">
+                <button className="h-28 w-28 hover:bg-white/[0.04] flex items-center justify-center border-r border-charcoal transition-colors">
                   <Reply size={14} className="text-smoke" />
                 </button>
-                <button className="h-28 w-32 hover:bg-white/[0.04] flex items-center justify-center transition-colors">
+                <button className="h-28 w-28 hover:bg-white/[0.04] flex items-center justify-center transition-colors">
                   <MoreHorizontal size={14} className="text-smoke" />
                 </button>
               </div>
-              <button className="h-28 w-32 rounded-input border border-red-500/20 hover:bg-red-500/10 flex items-center justify-center transition-colors">
+              <button className="h-28 w-28 rounded-input border border-red-500/20 hover:bg-red-500/10 flex items-center justify-center transition-colors">
                 <Trash2 size={14} className="text-red-400" />
               </button>
             </div>

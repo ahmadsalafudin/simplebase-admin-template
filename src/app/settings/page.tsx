@@ -57,24 +57,24 @@ export default function SettingsPage() {
               <p className="text-caption text-smoke -mt-16">
                 Choose how the simplebase looks on this device
               </p>
-              <div className="grid grid-cols-2 gap-16">
+              <div className="grid grid-cols-2 gap-8 sm:gap-16">
                 <button
                   onClick={() => setTheme("dark")}
-                  className={`flex flex-col items-center gap-16 rounded-card border p-24 transition-colors ${
+                  className={`flex flex-col items-center gap-8 sm:gap-16 rounded-card border p-12 sm:p-24 transition-colors ${
                     theme === "dark"
                       ? "border-phosphor-green bg-obsidian"
                       : "border-charcoal bg-obsidian hover:border-graphite"
                   }`}
                 >
-                  <div className="h-40 w-40 rounded-full bg-ash border border-charcoal flex items-center justify-center">
+                  <div className="h-32 w-32 sm:h-40 sm:w-40 rounded-full bg-ash border border-charcoal flex items-center justify-center">
                     <Moon size={18} className="text-phosphor-green" />
                   </div>
-                  <div className="flex flex-col items-center gap-4">
+                  <div className="hidden sm:flex flex-col items-center gap-4">
                     <span className="text-body-sm text-snow">Dark</span>
-                    <span className="text-caption text-smoke">Terminal-style, low glare</span>
+                    <span className="text-caption text-smoke text-center">Terminal-style, low glare</span>
                   </div>
                   <div
-                    className={`h-8 w-8 rounded-full border ${
+                    className={`hidden sm:block h-8 w-8 rounded-full border ${
                       theme === "dark" ? "bg-phosphor-green border-phosphor-green" : "border-slate"
                     }`}
                   />
@@ -82,21 +82,21 @@ export default function SettingsPage() {
 
                 <button
                   onClick={() => setTheme("light")}
-                  className={`flex flex-col items-center gap-16 rounded-card border p-24 transition-colors ${
+                  className={`flex flex-col items-center gap-8 sm:gap-16 rounded-card border p-12 sm:p-24 transition-colors ${
                     theme === "light"
                       ? "border-phosphor-green bg-obsidian"
                       : "border-charcoal bg-obsidian hover:border-graphite"
                   }`}
                 >
-                  <div className="h-40 w-40 rounded-full bg-ash border border-charcoal flex items-center justify-center">
+                  <div className="h-32 w-32 sm:h-40 sm:w-40 rounded-full bg-ash border border-charcoal flex items-center justify-center">
                     <Sun size={18} className="text-phosphor-green" />
                   </div>
-                  <div className="flex flex-col items-center gap-4">
+                  <div className="hidden sm:flex flex-col items-center gap-4">
                     <span className="text-body-sm text-snow">Light</span>
-                    <span className="text-caption text-smoke">Bright, high contrast</span>
+                    <span className="text-caption text-smoke text-center">Bright, high contrast</span>
                   </div>
                   <div
-                    className={`h-8 w-8 rounded-full border ${
+                    className={`hidden sm:block h-8 w-8 rounded-full border ${
                       theme === "light" ? "bg-phosphor-green border-phosphor-green" : "border-slate"
                     }`}
                   />
@@ -109,24 +109,24 @@ export default function SettingsPage() {
               <p className="text-caption text-smoke -mt-16">
                 Choose how much horizontal space tables and page content use
               </p>
-              <div className="grid grid-cols-2 gap-16">
+              <div className="grid grid-cols-2 gap-8 sm:gap-16">
                 <button
                   onClick={() => setTableWidth("center")}
-                  className={`flex flex-col items-center gap-16 rounded-card border p-24 transition-colors ${
+                  className={`flex flex-col items-center gap-8 sm:gap-16 rounded-card border p-12 sm:p-24 transition-colors ${
                     tableWidth === "center"
                       ? "border-phosphor-green bg-obsidian"
                       : "border-charcoal bg-obsidian hover:border-graphite"
                   }`}
                 >
-                  <div className="h-40 w-40 rounded-full bg-ash border border-charcoal flex items-center justify-center">
+                  <div className="h-32 w-32 sm:h-40 sm:w-40 rounded-full bg-ash border border-charcoal flex items-center justify-center">
                     <Minimize2 size={18} className="text-phosphor-green" />
                   </div>
-                  <div className="flex flex-col items-center gap-4">
+                  <div className="hidden sm:flex flex-col items-center gap-4">
                     <span className="text-body-sm text-snow">Center</span>
-                    <span className="text-caption text-smoke">Boxed content, max 1200px</span>
+                    <span className="text-caption text-smoke text-center">Boxed content, max 1200px</span>
                   </div>
                   <div
-                    className={`h-8 w-8 rounded-full border ${
+                    className={`hidden sm:block h-8 w-8 rounded-full border ${
                       tableWidth === "center" ? "bg-phosphor-green border-phosphor-green" : "border-slate"
                     }`}
                   />
@@ -134,21 +134,21 @@ export default function SettingsPage() {
 
                 <button
                   onClick={() => setTableWidth("wide")}
-                  className={`flex flex-col items-center gap-16 rounded-card border p-24 transition-colors ${
+                  className={`flex flex-col items-center gap-8 sm:gap-16 rounded-card border p-12 sm:p-24 transition-colors ${
                     tableWidth === "wide"
                       ? "border-phosphor-green bg-obsidian"
                       : "border-charcoal bg-obsidian hover:border-graphite"
                   }`}
                 >
-                  <div className="h-40 w-40 rounded-full bg-ash border border-charcoal flex items-center justify-center">
+                  <div className="h-32 w-32 sm:h-40 sm:w-40 rounded-full bg-ash border border-charcoal flex items-center justify-center">
                     <Maximize2 size={18} className="text-phosphor-green" />
                   </div>
-                  <div className="flex flex-col items-center gap-4">
+                  <div className="hidden sm:flex flex-col items-center gap-4">
                     <span className="text-body-sm text-snow">Wide</span>
-                    <span className="text-caption text-smoke">Tables stretch to fill the screen</span>
+                    <span className="text-caption text-smoke text-center">Tables stretch to fill the screen</span>
                   </div>
                   <div
-                    className={`h-8 w-8 rounded-full border ${
+                    className={`hidden sm:block h-8 w-8 rounded-full border ${
                       tableWidth === "wide" ? "bg-phosphor-green border-phosphor-green" : "border-slate"
                     }`}
                   />

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { avatarUrl, CURRENT_USER_SEED } from "@/lib/avatar";
+import { useMobileSidebar } from "./MobileSidebarContext";
 import {
   LayoutDashboard,
   User,
@@ -21,10 +22,14 @@ import {
   KanbanSquare,
   AlertTriangle,
   ChevronDown,
+  X,
 } from "lucide-react";
 
-const items = [
+const dashboardItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+];
+
+const pageItems = [
   { href: "/profile", label: "Profile", icon: User },
   { href: "/calendar", label: "Calendar", icon: Calendar },
   { href: "/timeline", label: "Project Timeline", icon: KanbanSquare },
@@ -48,23 +53,72 @@ export default function Sidebar() {
   const pathname = usePathname();
   const isErrorRoute = pathname.startsWith("/error");
   const [errorOpen, setErrorOpen] = useState(isErrorRoute);
+  const { open, setOpen } = useMobileSidebar();
 
   useEffect(() => {
     if (isErrorRoute) setErrorOpen(true);
   }, [isErrorRoute]);
 
+  // Close the mobile drawer whenever the route changes.
+  useEffect(() => {
+    setOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
   return (
-    <aside className="hidden md:flex md:flex-col w-[240px] shrink-0 border-r border-charcoal bg-obsidian h-screen sticky top-0">
-      <div className="h-64 flex items-center gap-8 px-24 border-b border-charcoal">
-        <div className="h-24 w-24 rounded-input bg-phosphor-green flex items-center justify-center">
-          <Terminal size={14} className="text-ink" strokeWidth={2.5} />
+    <>
+      {/* Backdrop, mobile only */}
+      {open ? (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 md:hidden"
+          onClick={() => setOpen(false)}
+          aria-hidden="true"
+        />
+      ) : null}
+
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col w-[240px] shrink-0 border-r border-charcoal bg-obsidian h-screen transition-transform duration-300 ease-in-out md:sticky md:top-0 md:z-auto md:translate-x-0 ${
+          open ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="h-64 flex items-center justify-between gap-8 px-24 border-b border-charcoal">
+          <div className="flex items-center gap-8 min-w-0">
+            <div className="h-24 w-24 rounded-input bg-phosphor-green flex items-center justify-center shrink-0">
+              <Terminal size={14} className="text-ink" strokeWidth={2.5} />
+            </div>
+            <span className="text-body-sm font-medium text-snow truncate">simplebase</span>
+          </div>
+          <button
+            onClick={() => setOpen(false)}
+            className="md:hidden h-28 w-28 rounded-input hover:bg-white/[0.04] flex items-center justify-center shrink-0 transition-colors"
+            aria-label="Close menu"
+          >
+            <X size={16} className="text-smoke" />
+          </button>
         </div>
-        <span className="text-body-sm font-medium text-snow">simplebase</span>
-      </div>
 
       <nav className="flex-1 overflow-y-auto px-16 py-24 flex flex-col gap-8">
-        <span className="px-16 pb-8 text-caption text-smoke">Workspace</span>
-        {items.map(({ href, label, icon: Icon }) => {
+        <span className="px-16 pb-8 text-caption text-smoke">Dashboard</span>
+        {dashboardItems.map(({ href, label, icon: Icon }) => {
+          const active = pathname === href;
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={active ? "nav-link-active" : "nav-link"}
+            >
+              <Icon
+                size={16}
+                strokeWidth={1.5}
+                className={active ? "text-phosphor-green" : "text-smoke"}
+              />
+              {label}
+            </Link>
+          );
+        })}
+
+        <span className="px-16 pt-16 pb-8 text-caption text-smoke">Page</span>
+        {pageItems.map(({ href, label, icon: Icon }) => {
           const active = pathname === href;
           return (
             <Link
@@ -159,6 +213,7 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

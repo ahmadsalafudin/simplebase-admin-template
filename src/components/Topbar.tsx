@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Search, Bell, Github, User, Settings, LogOut } from "lucide-react";
+import { Search, Bell, Github, User, Settings, LogOut, Menu } from "lucide-react";
 import { notifications as allNotifications } from "@/lib/data";
 import { avatarUrl, CURRENT_USER_SEED } from "@/lib/avatar";
 import ThemeToggle from "./ThemeToggle";
+import { useMobileSidebar } from "./MobileSidebarContext";
 
 export default function Topbar({
   title,
@@ -18,6 +19,7 @@ export default function Topbar({
   const [profileOpen, setProfileOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+  const { setOpen: setSidebarOpen } = useMobileSidebar();
 
   const unreadCount = allNotifications.filter((n) => n.unread).length;
 
@@ -40,11 +42,20 @@ export default function Topbar({
   return (
     <header className="sticky top-0 z-10 border-b border-charcoal bg-obsidian/95 backdrop-blur">
       <div className="flex items-center justify-between gap-16 px-24 md:px-32 h-64">
-        <div className="min-w-0">
-          <h1 className="text-subheading text-snow truncate">{title}</h1>
-          {subtitle ? (
-            <p className="text-caption text-smoke truncate">{subtitle}</p>
-          ) : null}
+        <div className="flex items-center gap-16 min-w-0">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="md:hidden h-32 w-32 rounded-input border border-slate flex items-center justify-center shrink-0 hover:border-graphite transition-colors"
+            aria-label="Open menu"
+          >
+            <Menu size={16} className="text-silver-mist" />
+          </button>
+          <div className="min-w-0">
+            <h1 className="text-subheading text-snow truncate">{title}</h1>
+            {subtitle ? (
+              <p className="text-caption text-smoke truncate">{subtitle}</p>
+            ) : null}
+          </div>
         </div>
 
         <div className="flex items-center gap-16">
@@ -83,44 +94,46 @@ export default function Topbar({
             </button>
 
             {notifOpen ? (
-              <div className="absolute right-0 mt-8 w-[320px] rounded-card border border-charcoal bg-obsidian shadow-xl overflow-hidden">
-                <div className="flex items-center justify-between px-16 py-16 border-b border-charcoal">
-                  <span className="text-body-sm text-snow font-medium">
-                    Notifications
-                  </span>
-                  {unreadCount > 0 ? (
-                    <span className="text-caption text-phosphor-green">
-                      {unreadCount} new
+              <div className="fixed inset-x-16 top-80 z-50 flex justify-center sm:absolute sm:inset-x-auto sm:top-full sm:right-0 sm:z-auto sm:mt-8 sm:block">
+                <div className="w-full max-w-[360px] sm:w-[320px] sm:max-w-none rounded-card border border-charcoal bg-obsidian shadow-xl overflow-hidden">
+                  <div className="flex items-center justify-between px-16 py-16 border-b border-charcoal">
+                    <span className="text-body-sm text-snow font-medium">
+                      Notifications
                     </span>
-                  ) : null}
-                </div>
-                <div className="max-h-[320px] overflow-y-auto">
-                  {allNotifications.map((n) => (
-                    <div
-                      key={n.id}
-                      className="flex items-start gap-8 px-16 py-16 border-b border-charcoal last:border-0 hover:bg-ash/50 transition-colors"
-                    >
-                      <span
-                        className={`mt-6 h-6 w-6 rounded-full shrink-0 ${
-                          n.unread ? "bg-phosphor-green" : "bg-transparent"
-                        }`}
-                      />
-                      <div className="min-w-0">
-                        <p className="text-body-sm text-snow truncate">
-                          {n.title}
-                        </p>
-                        <p className="text-caption text-smoke truncate">
-                          {n.desc}
-                        </p>
-                        <p className="text-caption text-smoke mt-2">{n.time}</p>
+                    {unreadCount > 0 ? (
+                      <span className="text-caption text-phosphor-green">
+                        {unreadCount} new
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="max-h-[320px] overflow-y-auto">
+                    {allNotifications.map((n) => (
+                      <div
+                        key={n.id}
+                        className="flex items-start gap-8 px-16 py-16 border-b border-charcoal last:border-0 hover:bg-ash/50 transition-colors"
+                      >
+                        <span
+                          className={`mt-6 h-6 w-6 rounded-full shrink-0 ${
+                            n.unread ? "bg-phosphor-green" : "bg-transparent"
+                          }`}
+                        />
+                        <div className="min-w-0">
+                          <p className="text-body-sm text-snow truncate">
+                            {n.title}
+                          </p>
+                          <p className="text-caption text-smoke truncate">
+                            {n.desc}
+                          </p>
+                          <p className="text-caption text-smoke mt-2">{n.time}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="px-16 py-8 border-t border-charcoal">
-                  <button className="text-caption text-mint-pulse hover:underline w-full text-center">
-                    Mark all as read
-                  </button>
+                    ))}
+                  </div>
+                  <div className="px-16 py-8 border-t border-charcoal">
+                    <button className="text-caption text-mint-pulse hover:underline w-full text-center">
+                      Mark all as read
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : null}
