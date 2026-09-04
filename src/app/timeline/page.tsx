@@ -79,7 +79,6 @@ export default function TimelinePage() {
                 }`}
               >
                 <List size={14} />
-                List
               </button>
               <button
                 onClick={() => setView("kanban")}
@@ -88,7 +87,6 @@ export default function TimelinePage() {
                 }`}
               >
                 <KanbanSquare size={14} />
-                Kanban
               </button>
             </div>
 

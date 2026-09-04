@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { avatarUrl, CURRENT_USER_SEED } from "@/lib/avatar";
 import { useMobileSidebar } from "./MobileSidebarContext";
 import {
   LayoutDashboard,
@@ -23,6 +22,7 @@ import {
   AlertTriangle,
   ChevronDown,
   X,
+  Heart,
 } from "lucide-react";
 
 const dashboardItems = [
@@ -199,19 +199,15 @@ export default function Sidebar() {
       </nav>
 
       <div className="px-16 py-24 border-t border-charcoal">
-        <div className="card-ash flex items-center gap-16">
-          <div className="h-32 w-32 rounded-full shrink-0 overflow-hidden">
-            <img
-              src={avatarUrl(CURRENT_USER_SEED)}
-              alt="Sal Pribadi"
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <div className="min-w-0">
-            <p className="text-body-sm text-snow truncate">Sal Pribadi</p>
-            <p className="text-caption text-smoke truncate">Pro plan</p>
-          </div>
-        </div>
+        <a
+          href="https://sociabuzz.com/ahmadsalafudin/tribe"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-8 w-full rounded-button bg-phosphor-green py-12 px-16 text-body-sm font-medium text-ink hover:bg-mint-pulse transition-colors"
+        >
+          <Heart size={16} className="fill-ink" />
+          Support me
+        </a>
       </div>
       </aside>
     </>
