@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { TableWidthProvider } from "@/components/TableWidthProvider";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Simplebase — Admin Dashboard",
@@ -14,14 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={outfit.variable}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap"
-          rel="stylesheet"
-        />
         {/* Apply the saved theme + layout width before paint to avoid a flash */}
         <script
           dangerouslySetInnerHTML={{
@@ -34,7 +35,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased bg-obsidian text-snow">
+      <body className={`${outfit.className} antialiased bg-obsidian text-snow`}>
         <ThemeProvider>
           <TableWidthProvider>{children}</TableWidthProvider>
         </ThemeProvider>

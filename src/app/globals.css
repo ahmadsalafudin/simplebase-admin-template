@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --font-circular: "Inter";
+  --font-outfit: "Outfit", sans-serif;
+  --font-circular: "Outfit", var(--font-outfit), sans-serif;
   --font-source-code-pro: "JetBrains Mono";
   --content-max-width: 1200px;
 
@@ -12,7 +13,7 @@
   --color-mint-pulse: #00c573;
   --color-forest-depth: #1f4b37;
   --color-midnight-emerald: #006239;
-  --color-snow: #fafafa;
+  --color-snow: oklab(1 0 5.96046e-8 / 0.9);
   --color-silver-mist: #b4b4b4;
   --color-smoke: #898989;
   --color-graphite: #4d4d4d;
@@ -22,7 +23,7 @@
   --color-obsidian: #121212;
   --color-canvas: #0d0d0d;
   --color-selection-bg: #1f4b37;
-  --color-selection-text: #fafafa;
+  --color-selection-text: oklab(1 0 5.96046e-8 / 0.9);
   --color-scrollbar-track: #121212;
   --color-scrollbar-thumb: #2e2e2e;
   --color-scrollbar-thumb-hover: #393939;
@@ -87,13 +88,14 @@ html.wide-layout {
 
 html,
 body {
+  font-family: "Outfit", var(--font-outfit), sans-serif;
   background-color: var(--color-obsidian);
   color: var(--color-snow);
   transition: background-color 150ms ease, color 150ms ease;
 }
 
 body {
-  font-family: var(--font-circular), ui-sans-serif, system-ui, sans-serif;
+  font-family: "Outfit", var(--font-outfit), sans-serif;
   letter-spacing: -0.007em;
   -webkit-font-smoothing: antialiased;
 }
